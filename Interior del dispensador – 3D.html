@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Interior del dispensador – 3D</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1d2330;--mut:#6b7385;--bd:#dde1e8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171d;--card:#1e232c;--tx:#eef0f4;--mut:#9aa3b5;--bd:#303744}}
+:root[data-theme="dark"]{--bg:#14171d;--card:#1e232c;--tx:#eef0f4;--mut:#9aa3b5;--bd:#303744}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.4}
+header{padding:14px 18px;border-bottom:1px solid var(--bd)}h1{font-size:17px;margin:0}header p{margin:2px 0 0;font-size:13px;color:var(--mut)}
+main{max-width:760px;margin:auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.stage{height:380px;perspective:1000px;display:flex;align-items:center;justify-content:center;background:#55575c;border-radius:10px;touch-action:none;cursor:grab;overflow:hidden}
+.scene{position:relative;width:300px;height:200px;transform-style:preserve-3d;transform:rotateX(-8deg) rotateY(-20deg) scale(1.1)}
+.a{position:absolute;transform-style:preserve-3d}
+.plate{left:0;top:0;width:300px;height:200px;background:#1b1d22;border:2px solid #444;transform:translateZ(-50px)}
+.part{position:absolute;border-radius:3px;font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;cursor:pointer;border:1px solid rgba(255,255,255,.5);box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.part:hover,.part.sel{outline:2px solid #ffd54a}
+.face{position:absolute;display:flex;align-items:flex-end;justify-content:center;font-size:8px;color:#fff;overflow:hidden}
+.shell{left:0;top:0;width:300px;height:200px;background:rgba(40,45,55,.35);border:2px solid #9aa;transform:translateZ(50px);transition:opacity .3s;pointer-events:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+svg{position:absolute;left:0;top:0;transform:translateZ(-48px);pointer-events:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;cursor:pointer}
+#info{font-size:14px;min-height:60px}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{border-bottom:1px solid var(--bd);padding:5px 6px;text-align:left}
+h2{font-size:13px;margin:0 0 8px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.wrap{overflow-x:auto}
+</style></head><body>
+<header><h1>Vista interior 3D · SmartDispenser</h1><p>Arrastra para girar · toca cada componente para ver qué hace</p></header>
+<main>
+<div class="card">
+<div class="stage" id="st"><div class="scene" id="sc">
+<div class="a plate"></div>
+<svg width="300" height="200" viewBox="0 0 300 200">
+<path d="M88 16H100" stroke="#ef4444" stroke-width="2" fill="none"/>
+<path d="M200 16H212" stroke="#3b82f6" stroke-width="2" fill="none"/>
+<g stroke="#f59e0b" stroke-width="1.5" fill="none"><path d="M130 29L45 34"/><path d="M140 29L115 34"/><path d="M160 29L185 34"/><path d="M170 29L255 34"/></g>
+<g stroke="#22c55e" stroke-width="1.5"><path d="M45 52V56"/><path d="M115 52V56"/><path d="M185 52V56"/><path d="M255 52V56"/></g>
+<path d="M292 29V162H45" stroke="#60a5fa" stroke-width="1.5" fill="none" stroke-dasharray="4 2"/>
+</svg>
+<div class="shell" id="shell">Carcasa (frontal)</div>
+</div></div>
+<div class="row"><button onclick="tg()">Quitar / poner carcasa</button><button onclick="rs()">Reiniciar vista</button></div>
+</div>
+<div class="card"><h2>Componente</h2><div id="info">Toca una pieza del modelo.</div></div>
+<div class="card"><h2>Conexiones (ESP32)</h2><div class="wrap"><table>
+<tr><th>Componente</th><th>Pin ESP32</th></tr>
+<tr><td>HX711 #1 (DT / SCK)</td><td>GPIO 32 / 33</td></tr>
+<tr><td>HX711 #2 (DT / SCK)</td><td>GPIO 25 / 26</td></tr>
+<tr><td>HX711 #3 (DT / SCK)</td><td>GPIO 27 / 14</td></tr>
+<tr><td>HX711 #4 (DT / SCK)</td><td>GPIO 12 / 13</td></tr>
+<tr><td>Driver bombas 1–4</td><td>GPIO 16, 17, 18, 19</td></tr>
+<tr><td>Tira LED (4 tramos)</td><td>GPIO 4 (WS2812)</td></tr>
+<tr><td>Alimentación</td><td>5V / GND de la fuente</td></tr></table></div></div>
+</main>
+<script>
+const sc=document.getElementById('sc'),I=document.getElementById('info');
+const C=['#3b82f6','#e5e7eb','#22c55e','#a855f7'],N=['Jabón','Espuma','Desinfectante','Shampoo'];
+const tx={
+esp:'<b>ESP32</b> (cerebro). Lee el peso de cada botella, calcula el nivel y lo envía por Wi-Fi al software del hotel. También enciende los LEDs y activa las bombas.',
+psu:'<b>Fuente 5V / 2A</b>. Alimenta todo el sistema. Se conecta a la corriente de la habitación o a un transformador.',
+drv:'<b>Driver de bombas</b> (módulo MOSFET o relé de 4 canales). El ESP32 manda la señal y el driver da la corriente que necesitan las bombas.',
+hx:'<b>Módulo HX711</b>. Amplifica la señal diminuta de la celda de carga y la convierte en un número que el ESP32 entiende.',
+lc:'<b>Celda de carga (1 kg)</b>. La botella cuelga de ella. Al bajar el líquido, el peso baja, y así se sabe cuántos ml quedan.',
+bt:'<b>Depósito / botella</b> (≈ 400 ml). Se saca por abajo para rellenarlo. Pesa: líquido + envase.',
+pm:'<b>Bomba</b> de líquido o espuma. Sale por la boquilla inferior cuando el huésped acerca la mano o presiona.'};
+function bx(l,t,w,h,d,z,col,fill){const g=document.createElement('div');g.className='a';g.style.cssText='left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px;transform:translateZ('+z+'px)';
+ const f=(cls,W,H,tr,left)=>{const e=document.createElement('div');e.className='face';e.style.cssText='width:'+W+'px;height:'+H+'px;left:'+left+'px;background:'+col+';opacity:.85;border:1px solid rgba(255,255,255,.5);transform:'+tr;return e};
+ const fr=f('',w,h,'translateZ('+d/2+'px)',0);fr.style.background='linear-gradient(to top,'+col+' '+fill+'%,rgba(255,255,255,.15) '+fill+'%)';g.append(fr,f('',w,h,'rotateY(180deg) translateZ('+d/2+'px)',0),f('',d,h,'rotateY(-90deg) translateZ('+w/2+'px)',(w-d)/2),f('',d,h,'rotateY(90deg) translateZ('+w/2+'px)',(w-d)/2));return[g,fr]}
+function part(l,t,w,h,z,col,txt,k){const p=document.createElement('div');p.className='part';p.style.cssText='left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px;background:'+col+';transform:translateZ('+z+'px)';p.innerHTML=txt;p.onclick=()=>show(k,p);sc.appendChild(p)}
+function show(k,p){I.innerHTML=tx[k];document.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));p.classList.add('sel')}
+part(100,3,100,26,-44,'#0e7490','ESP32<br>(Wi-Fi)','esp');
+part(8,3,80,26,-44,'#b91c1c','Fuente 5V','psu');
+part(212,3,80,26,-44,'#1d4ed8','Driver bombas','drv');
+[25,95,165,235].forEach((l,i)=>{
+ part(l+8,34,40,18,-44,'#15803d','HX711','hx');
+ part(l,56,56,8,-30,'#d4d4d8','<span style="color:#111">Celda</span>','lc');
+ const [g,fr]=bx(l,68,56,80,40,-10,C[i],[70,55,45,80][i]);fr.innerHTML=N[i];fr.onclick=null;g.onclick=e=>show('bt',g);g.style.cursor='pointer';sc.appendChild(g);
+ part(l+16,150,24,22,-20,'#52525b','Bomba','pm');
+ const nz=document.createElement('div');nz.className='a';nz.style.cssText='left:'+(l+25)+'px;top:172px;width:6px;height:24px;background:#bbb;transform:translateZ(-10px)';sc.appendChild(nz)});
+let rx=-8,ry=-20,d=0,lx,ly;const s=document.getElementById('st');
+const up=()=>sc.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg) scale(1.1)';
+s.onpointerdown=e=>{d=1;lx=e.clientX;ly=e.clientY;s.setPointerCapture(e.pointerId)};s.onpointerup=()=>d=0;
+s.onpointermove=e=>{if(!d)return;ry+=(e.clientX-lx)*.6;rx-=(e.clientY-ly)*.4;lx=e.clientX;ly=e.clientY;up()};
+function tg(){const e=document.getElementById('shell');e.style.opacity=e.style.opacity==='0'?1:0}
+function rs(){rx=-8;ry=-20;up()}
+</script></body></html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hotel Aurora · Dispensadores inteligentes</title>
+<style>
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+body{display:flex;flex-direction:column;background:#1d2a2e}
+nav{display:flex;gap:6px;padding:8px 10px;background:#1d2a2e}
+nav button{font:inherit;font-size:14px;padding:8px 14px;border:0;border-radius:8px;background:#2c3b3f;color:#fff;cursor:pointer}
+nav button.on{background:#1f6f78}
+iframe{flex:1;width:100%;border:0;display:none;background:#fff}
+iframe.on{display:block}
+</style></head><body>
+<nav><button id="b1" class="on" onclick="go(1)">🏨 Panel del hotel</button><button id="b2" onclick="go(2)">🔧 Interior 3D</button></nav>
+<iframe id="f1" class="on" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;es&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, viewport-fit=cover&quot;&gt;
+&lt;title&gt;Hotel Aurora · Panel de dispensadores&lt;/title&gt;
+&lt;style&gt;
+:root{--bg:#f6f4ef;--card:#fff;--tx:#1d2a2e;--mu:#6b7a7e;--ac:#1f6f78;--ok:#2e9e5b;--wa:#e0a100;--bad:#d64545;--bd:#e3dfd6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=&quot;light&quot;]){--bg:#121a1c;--card:#1b2629;--tx:#e8efef;--mu:#93a4a7;--ac:#4cb5bf;--bd:#2c3b3f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,sans-serif}
+header{padding:16px;background:var(--ac);color:#fff}header h1{margin:0;font:600 20px Georgia,serif}header p{margin:2px 0 0;opacity:.85;font-size:13px}
+main{max-width:900px;margin:auto;padding:12px;display:grid;gap:12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px}
+h2{margin:0 0 8px;font-size:16px}
+.tabs{display:flex;gap:6px;overflow-x:auto}.tabs button{flex:1;min-width:70px}
+button,select,input{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx)}
+button{cursor:pointer}button.p{background:var(--ac);color:#fff;border-color:var(--ac)}button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.prod{padding:10px 0;border-top:1px solid var(--bd)}.prod:first-of-type{border-top:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden;margin:6px 0 2px}.bar i{display:block;height:100%;transition:width .4s}
+.m{font-size:12px;color:var(--mu)}
+.al{padding:8px 10px;border-radius:8px;margin-top:6px;font-size:13px;background:#d6454522;border:1px solid var(--bad)}
+.al.w{background:#e0a10022;border-color:var(--wa)}
+.g{display:grid;gap:8px;grid-template-columns:1fr 1fr}.acts{display:flex;gap:8px;flex-wrap:wrap}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}.sum b{display:block;font-size:22px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
+th,td{border:1px solid var(--bd);padding:7px 8px;text-align:center;white-space:nowrap}th{background:var(--bg);color:var(--mu);font-weight:600}
+td.l{text-align:left}tr.r{cursor:pointer}tr.r:hover td{background:var(--bg)}
+.c{font-weight:600;color:#fff}.st{font-weight:600}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;header&gt;&lt;h1&gt;🏨 Hotel Aurora&lt;/h1&gt;&lt;p&gt;Panel de dispensadores inteligentes · personal de servicio&lt;/p&gt;&lt;/header&gt;
+&lt;main&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;tabs&quot;&gt;&lt;button id=&quot;t1&quot; onclick=&quot;view(1)&quot;&gt;Por habitación&lt;/button&gt;&lt;button id=&quot;t2&quot; onclick=&quot;view(2)&quot;&gt;Todas las habitaciones&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;section id=&quot;v1&quot; style=&quot;display:grid;gap:12px&quot;&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;tabs&quot; id=&quot;tabs&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;h2&gt;Huésped · Habitación &lt;span id=&quot;rn&quot;&gt;&lt;/span&gt;&lt;/h2&gt;
+&lt;div id=&quot;guest&quot; class=&quot;m&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;g&quot; style=&quot;margin-top:8px&quot;&gt;&lt;input id=&quot;nm&quot; placeholder=&quot;Nombre del huésped&quot;&gt;&lt;select id=&quot;al&quot;&gt;&lt;option value=&quot;&quot;&gt;Sin alergias&lt;/option&gt;&lt;option value=&quot;fragancia&quot;&gt;Alergia a fragancia&lt;/option&gt;&lt;option value=&quot;alcohol&quot;&gt;Alergia a alcohol&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;
+&lt;div class=&quot;acts&quot; style=&quot;margin-top:8px&quot;&gt;&lt;button class=&quot;p&quot; onclick=&quot;checkin()&quot;&gt;Check-in (PMS simulado)&lt;/button&gt;&lt;button onclick=&quot;checkout()&quot;&gt;Check-out&lt;/button&gt;&lt;/div&gt;
+&lt;div id=&quot;galert&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;h2&gt;Niveles&lt;/h2&gt;&lt;div id=&quot;prods&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;acts&quot; style=&quot;margin-top:10px&quot;&gt;&lt;button class=&quot;p&quot; onclick=&quot;refill()&quot;&gt;Rellenar habitación&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section id=&quot;v2&quot; style=&quot;display:none;gap:12px&quot;&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;sum&quot;&gt;&lt;div&gt;&lt;b id=&quot;s1&quot;&gt;0&lt;/b&gt;&lt;span class=&quot;m&quot;&gt;Habitaciones&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;b id=&quot;s2&quot; style=&quot;color:var(--bad)&quot;&gt;0&lt;/b&gt;&lt;span class=&quot;m&quot;&gt;Críticas&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;b id=&quot;s3&quot; style=&quot;color:var(--wa)&quot;&gt;0&lt;/b&gt;&lt;span class=&quot;m&quot;&gt;Nivel bajo&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;h2&gt;Alertas activas&lt;/h2&gt;&lt;div id=&quot;alerts&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;h2&gt;Estado general&lt;/h2&gt;&lt;div class=&quot;tw&quot;&gt;&lt;table id=&quot;tbl&quot;&gt;&lt;/table&gt;&lt;/div&gt;
+&lt;p class=&quot;m&quot;&gt;Toca una fila para abrir la habitación.&lt;/p&gt;
+&lt;div class=&quot;acts&quot;&gt;&lt;button onclick=&quot;day()&quot;&gt;Simular 1 día&lt;/button&gt;&lt;button onclick=&quot;refillAll()&quot;&gt;Rellenar todo&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/section&gt;
+&lt;/main&gt;
+&lt;script&gt;
+const P=[&quot;Shampoo&quot;,&quot;Acondicionador&quot;,&quot;Jabón corporal&quot;,&quot;Crema&quot;],CAP=500;
+const R={101:{u:[40,30,35,20],l:[420,380,300,150]},102:{u:[45,25,40,15],l:[500,260,210,90]},103:{u:[30,20,30,25],l:[300,450,120,430]},104:{u:[50,35,45,30],l:[180,100,400,330]},105:{u:[35,30,30,20],l:[460,400,380,90]},106:{u:[40,25,35,25],l:[90,300,250,410]}};
+for(const k in R)R[k].g=null;
+let cur=101,V=1;
+const $=id=&gt;document.getElementById(id);
+const pc=(r,i)=&gt;Math.round(r.l[i]/CAP*100);
+const col=p=&gt;p&gt;40?&#x27;var(--ok)&#x27;:p&gt;20?&#x27;var(--wa)&#x27;:&#x27;var(--bad)&#x27;;
+function view(n){V=n;$(&#x27;v1&#x27;).style.display=n==1?&#x27;grid&#x27;:&#x27;none&#x27;;$(&#x27;v2&#x27;).style.display=n==2?&#x27;grid&#x27;:&#x27;none&#x27;;$(&#x27;t1&#x27;).className=n==1?&#x27;on&#x27;:&#x27;&#x27;;$(&#x27;t2&#x27;).className=n==2?&#x27;on&#x27;:&#x27;&#x27;;render()}
+function gtxt(g){return g?`&lt;b&gt;${g.n}&lt;/b&gt; · ${g.a?&#x27;alergia a &#x27;+g.a:&#x27;sin alergias registradas&#x27;}`:&#x27;Habitación libre&#x27;}
+function render(){
+ if(V==1){const r=R[cur];$(&#x27;rn&#x27;).textContent=cur;
+ $(&#x27;tabs&#x27;).innerHTML=Object.keys(R).map(k=&gt;`&lt;button class=&quot;${k==cur?&#x27;on&#x27;:&#x27;&#x27;}&quot; onclick=&quot;cur=${k};render()&quot;&gt;${k}&lt;/button&gt;`).join(&#x27;&#x27;);
+ let h=&#x27;&#x27;;
+ P.forEach((n,i)=&gt;{const v=r.l[i],p=pc(r,i),d=v/r.u[i];
+  h+=`&lt;div class=&quot;prod&quot;&gt;&lt;div class=&quot;top&quot;&gt;&lt;b&gt;${n}&lt;/b&gt;&lt;button onclick=&quot;disp(${i})&quot;&gt;Dispensar&lt;/button&gt;&lt;/div&gt;
+  &lt;div class=&quot;bar&quot;&gt;&lt;i style=&quot;width:${p}%;background:${col(p)}&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+  &lt;div class=&quot;m&quot;&gt;${Math.round(v)} ml · ${p}% · ~${d.toFixed(1)} días restantes&lt;/div&gt;
+  ${p&lt;=20?`&lt;div class=&quot;al&quot;&gt;⚠️ Nivel crítico: rellenar ${n} en hab. ${cur}&lt;/div&gt;`:p&lt;=40?`&lt;div class=&quot;al w&quot;&gt;Nivel bajo: programar relleno&lt;/div&gt;`:&#x27;&#x27;}&lt;/div&gt;`});
+ $(&#x27;prods&#x27;).innerHTML=h;$(&#x27;guest&#x27;).innerHTML=gtxt(r.g);const g=r.g;
+ $(&#x27;galert&#x27;).innerHTML=g&amp;&amp;g.a===&#x27;fragancia&#x27;?&#x27;&lt;div class=&quot;al&quot;&gt;⚠️ Huésped alérgico a fragancia: cambiar el shampoo por versión sin fragancia.&lt;/div&gt;&#x27;:g&amp;&amp;g.a===&#x27;alcohol&#x27;?&#x27;&lt;div class=&quot;al&quot;&gt;⚠️ Huésped alérgico al alcohol: revisar que los productos no lo contengan.&lt;/div&gt;&#x27;:&#x27;&#x27;;
+ }else{
+ let cr=0,lo=0,al=[],t=&#x27;&lt;tr&gt;&lt;th&gt;Hab.&lt;/th&gt;&lt;th&gt;Huésped&lt;/th&gt;&lt;th&gt;Alergia&lt;/th&gt;&#x27;+P.map(p=&gt;`&lt;th&gt;${p}&lt;/th&gt;`).join(&#x27;&#x27;)+&#x27;&lt;th&gt;Estado&lt;/th&gt;&lt;/tr&gt;&#x27;;
+ for(const k in R){const r=R[k],ps=P.map((_,i)=&gt;pc(r,i)),mn=Math.min(...ps);
+  const s=mn&lt;=20?&#x27;Crítico&#x27;:mn&lt;=40?&#x27;Bajo&#x27;:&#x27;OK&#x27;;if(s==&#x27;Crítico&#x27;)cr++;else if(s==&#x27;Bajo&#x27;)lo++;
+  P.forEach((n,i)=&gt;{if(ps[i]&lt;=20)al.push(`&lt;div class=&quot;al&quot;&gt;⚠️ Hab. ${k}: ${n} crítico (${ps[i]}%) · quedan ~${(r.l[i]/r.u[i]).toFixed(1)} días&lt;/div&gt;`);else if(ps[i]&lt;=40)al.push(`&lt;div class=&quot;al w&quot;&gt;Hab. ${k}: ${n} bajo (${ps[i]}%)&lt;/div&gt;`)});
+  if(r.g&amp;&amp;r.g.a)al.push(`&lt;div class=&quot;al w&quot;&gt;Hab. ${k}: huésped con alergia a ${r.g.a}${r.g.a==&#x27;fragancia&#x27;?&#x27; · cambiar shampoo&#x27;:&#x27;&#x27;}&lt;/div&gt;`);
+  t+=`&lt;tr class=&quot;r&quot; onclick=&quot;cur=${k};view(1)&quot;&gt;&lt;td&gt;&lt;b&gt;${k}&lt;/b&gt;&lt;/td&gt;&lt;td class=&quot;l&quot;&gt;${r.g?r.g.n:&#x27;&lt;span class=&quot;m&quot;&gt;Libre&lt;/span&gt;&#x27;}&lt;/td&gt;&lt;td&gt;${r.g&amp;&amp;r.g.a?r.g.a:&#x27;—&#x27;}&lt;/td&gt;`+ps.map(p=&gt;`&lt;td class=&quot;c&quot; style=&quot;background:${col(p)}&quot;&gt;${p}%&lt;/td&gt;`).join(&#x27;&#x27;)+`&lt;td class=&quot;st&quot; style=&quot;color:${col(mn)}&quot;&gt;${s}&lt;/td&gt;&lt;/tr&gt;`}
+ $(&#x27;tbl&#x27;).innerHTML=t;$(&#x27;s1&#x27;).textContent=Object.keys(R).length;$(&#x27;s2&#x27;).textContent=cr;$(&#x27;s3&#x27;).textContent=lo;
+ $(&#x27;alerts&#x27;).innerHTML=al.join(&#x27;&#x27;)||&#x27;&lt;span class=&quot;m&quot;&gt;Sin alertas 🎉&lt;/span&gt;&#x27;;}
+}
+function disp(i){const r=R[cur];r.l[i]=Math.max(0,r.l[i]-10);render()}
+function refill(){R[cur].l=[CAP,CAP,CAP,CAP];render()}
+function refillAll(){for(const k in R)R[k].l=[CAP,CAP,CAP,CAP];render()}
+function day(){for(const k in R){const r=R[k];r.l=r.l.map((v,i)=&gt;Math.max(0,v-r.u[i]))}render()}
+function checkin(){R[cur].g={n:$(&#x27;nm&#x27;).value.trim()||&#x27;Huésped&#x27;,a:$(&#x27;al&#x27;).value};render()}
+function checkout(){R[cur].g=null;render()}
+view(1);
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+"></iframe>
+<iframe id="f2" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;es&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, viewport-fit=cover&quot;&gt;
+&lt;title&gt;Interior del dispensador – 3D&lt;/title&gt;
+&lt;style&gt;
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1d2330;--mut:#6b7385;--bd:#dde1e8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=&quot;light&quot;]){--bg:#14171d;--card:#1e232c;--tx:#eef0f4;--mut:#9aa3b5;--bd:#303744}}
+:root[data-theme=&quot;dark&quot;]{--bg:#14171d;--card:#1e232c;--tx:#eef0f4;--mut:#9aa3b5;--bd:#303744}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,&quot;Segoe UI&quot;,sans-serif;line-height:1.4}
+header{padding:14px 18px;border-bottom:1px solid var(--bd)}h1{font-size:17px;margin:0}header p{margin:2px 0 0;font-size:13px;color:var(--mut)}
+main{max-width:760px;margin:auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.stage{height:380px;perspective:1000px;display:flex;align-items:center;justify-content:center;background:#55575c;border-radius:10px;touch-action:none;cursor:grab;overflow:hidden}
+.scene{position:relative;width:300px;height:200px;transform-style:preserve-3d;transform:rotateX(-8deg) rotateY(-20deg) scale(1.1)}
+.a{position:absolute;transform-style:preserve-3d}
+.plate{left:0;top:0;width:300px;height:200px;background:#1b1d22;border:2px solid #444;transform:translateZ(-50px)}
+.part{position:absolute;border-radius:3px;font-size:6.5px;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;cursor:pointer;border:1px solid rgba(255,255,255,.5);box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.part:hover,.part.sel{outline:2px solid #ffd54a}
+.face{position:absolute;display:flex;align-items:flex-end;justify-content:center;font-size:9px;color:#fff;overflow:hidden}
+.shell{left:0;top:0;width:300px;height:200px;background:rgba(40,45,55,.35);border:2px solid #9aa;transform:translateZ(50px);transition:opacity .3s;pointer-events:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+svg{position:absolute;left:0;top:0;transform:translateZ(-48px);pointer-events:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;cursor:pointer}
+#info{font-size:14px;min-height:60px}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{border-bottom:1px solid var(--bd);padding:5px 6px;text-align:left}
+h2{font-size:13px;margin:0 0 8px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.wrap{overflow-x:auto}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;header&gt;&lt;h1&gt;Vista interior 3D · SmartDispenser&lt;/h1&gt;&lt;p&gt;Arrastra para girar · cada pieza muestra su función&lt;/p&gt;&lt;/header&gt;
+&lt;main&gt;
+&lt;div class=&quot;card&quot;&gt;
+&lt;div class=&quot;stage&quot; id=&quot;st&quot;&gt;&lt;div class=&quot;scene&quot; id=&quot;sc&quot;&gt;
+&lt;div class=&quot;a plate&quot;&gt;&lt;/div&gt;
+&lt;svg width=&quot;300&quot; height=&quot;200&quot; viewBox=&quot;0 0 300 200&quot;&gt;
+&lt;path d=&quot;M88 16H100&quot; stroke=&quot;#ef4444&quot; stroke-width=&quot;2&quot; fill=&quot;none&quot;/&gt;
+&lt;path d=&quot;M200 16H212&quot; stroke=&quot;#3b82f6&quot; stroke-width=&quot;2&quot; fill=&quot;none&quot;/&gt;
+&lt;g stroke=&quot;#f59e0b&quot; stroke-width=&quot;1.5&quot; fill=&quot;none&quot;&gt;&lt;path d=&quot;M130 29L45 34&quot;/&gt;&lt;path d=&quot;M140 29L115 34&quot;/&gt;&lt;path d=&quot;M160 29L185 34&quot;/&gt;&lt;path d=&quot;M170 29L255 34&quot;/&gt;&lt;/g&gt;
+&lt;g stroke=&quot;#22c55e&quot; stroke-width=&quot;1.5&quot;&gt;&lt;path d=&quot;M45 52V56&quot;/&gt;&lt;path d=&quot;M115 52V56&quot;/&gt;&lt;path d=&quot;M185 52V56&quot;/&gt;&lt;path d=&quot;M255 52V56&quot;/&gt;&lt;/g&gt;
+&lt;path d=&quot;M292 29V162H45&quot; stroke=&quot;#60a5fa&quot; stroke-width=&quot;1.5&quot; fill=&quot;none&quot; stroke-dasharray=&quot;4 2&quot;/&gt;
+&lt;/svg&gt;
+&lt;div class=&quot;shell&quot; id=&quot;shell&quot;&gt;Carcasa (frontal)&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;row&quot;&gt;&lt;button onclick=&quot;tg()&quot;&gt;Quitar / poner carcasa&lt;/button&gt;&lt;button onclick=&quot;rs()&quot;&gt;Reiniciar vista&lt;/button&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;h2&gt;Para qué sirve cada pieza&lt;/h2&gt;&lt;div id=&quot;info&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;h2&gt;Conexiones (ESP32)&lt;/h2&gt;&lt;div class=&quot;wrap&quot;&gt;&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Componente&lt;/th&gt;&lt;th&gt;Pin ESP32&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;HX711 #1 (DT / SCK)&lt;/td&gt;&lt;td&gt;GPIO 32 / 33&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;HX711 #2 (DT / SCK)&lt;/td&gt;&lt;td&gt;GPIO 25 / 26&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;HX711 #3 (DT / SCK)&lt;/td&gt;&lt;td&gt;GPIO 27 / 14&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;HX711 #4 (DT / SCK)&lt;/td&gt;&lt;td&gt;GPIO 12 / 13&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Driver bombas 1–4&lt;/td&gt;&lt;td&gt;GPIO 16, 17, 18, 19&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Tira LED (4 tramos)&lt;/td&gt;&lt;td&gt;GPIO 4 (WS2812)&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Alimentación&lt;/td&gt;&lt;td&gt;5V / GND de la fuente&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/main&gt;
+&lt;script&gt;
+const sc=document.getElementById(&#x27;sc&#x27;),I=document.getElementById(&#x27;info&#x27;);
+const C=[&#x27;#3b82f6&#x27;,&#x27;#e5e7eb&#x27;,&#x27;#22c55e&#x27;,&#x27;#a855f7&#x27;],N=[&#x27;Jabón&#x27;,&#x27;Espuma&#x27;,&#x27;Desinfectante&#x27;,&#x27;Shampoo&#x27;];
+const tx={
+esp:&#x27;&lt;b&gt;ESP32&lt;/b&gt; (cerebro). Lee el peso de cada botella, calcula el nivel y lo envía por Wi-Fi al software del hotel. También enciende los LEDs y activa las bombas.&#x27;,
+psu:&#x27;&lt;b&gt;Fuente 5V / 2A&lt;/b&gt;. Alimenta todo el sistema. Se conecta a la corriente de la habitación o a un transformador.&#x27;,
+drv:&#x27;&lt;b&gt;Driver de bombas&lt;/b&gt; (módulo MOSFET o relé de 4 canales). El ESP32 manda la señal y el driver da la corriente que necesitan las bombas.&#x27;,
+hx:&#x27;&lt;b&gt;Módulo HX711&lt;/b&gt;. Amplifica la señal diminuta de la celda de carga y la convierte en un número que el ESP32 entiende.&#x27;,
+lc:&#x27;&lt;b&gt;Celda de carga (1 kg)&lt;/b&gt;. La botella cuelga de ella. Al bajar el líquido, el peso baja, y así se sabe cuántos ml quedan.&#x27;,
+bt:&#x27;&lt;b&gt;Depósito / botella&lt;/b&gt; (≈ 400 ml). Se saca por abajo para rellenarlo. Pesa: líquido + envase.&#x27;,
+pm:&#x27;&lt;b&gt;Bomba&lt;/b&gt; de líquido o espuma. Sale por la boquilla inferior cuando el huésped acerca la mano o presiona.&#x27;};
+function bx(l,t,w,h,d,z,col,fill){const g=document.createElement(&#x27;div&#x27;);g.className=&#x27;a&#x27;;g.style.cssText=&#x27;left:&#x27;+l+&#x27;px;top:&#x27;+t+&#x27;px;width:&#x27;+w+&#x27;px;height:&#x27;+h+&#x27;px;transform:translateZ(&#x27;+z+&#x27;px)&#x27;;
+ const f=(cls,W,H,tr,left)=&gt;{const e=document.createElement(&#x27;div&#x27;);e.className=&#x27;face&#x27;;e.style.cssText=&#x27;width:&#x27;+W+&#x27;px;height:&#x27;+H+&#x27;px;left:&#x27;+left+&#x27;px;background:&#x27;+col+&#x27;;opacity:.85;border:1px solid rgba(255,255,255,.5);transform:&#x27;+tr;return e};
+ const fr=f(&#x27;&#x27;,w,h,&#x27;translateZ(&#x27;+d/2+&#x27;px)&#x27;,0);fr.style.background=&#x27;linear-gradient(to top,&#x27;+col+&#x27; &#x27;+fill+&#x27;%,rgba(255,255,255,.15) &#x27;+fill+&#x27;%)&#x27;;g.append(fr,f(&#x27;&#x27;,w,h,&#x27;rotateY(180deg) translateZ(&#x27;+d/2+&#x27;px)&#x27;,0),f(&#x27;&#x27;,d,h,&#x27;rotateY(-90deg) translateZ(&#x27;+w/2+&#x27;px)&#x27;,(w-d)/2),f(&#x27;&#x27;,d,h,&#x27;rotateY(90deg) translateZ(&#x27;+w/2+&#x27;px)&#x27;,(w-d)/2));return[g,fr]}
+function part(l,t,w,h,z,col,txt,k){const p=document.createElement(&#x27;div&#x27;);p.className=&#x27;part&#x27;;p.style.cssText=&#x27;left:&#x27;+l+&#x27;px;top:&#x27;+t+&#x27;px;width:&#x27;+w+&#x27;px;height:&#x27;+h+&#x27;px;background:&#x27;+col+&#x27;;transform:translateZ(&#x27;+z+&#x27;px)&#x27;;p.innerHTML=txt;p.onclick=()=&gt;show(k,p);sc.appendChild(p)}
+function show(k,p){document.querySelectorAll(&#x27;.sel&#x27;).forEach(e=&gt;e.classList.remove(&#x27;sel&#x27;));p.classList.add(&#x27;sel&#x27;)}
+I.innerHTML=Object.values(tx).map(t=&gt;&#x27;&lt;p style=&quot;margin:0 0 8px&quot;&gt;&#x27;+t+&#x27;&lt;/p&gt;&#x27;).join(&#x27;&#x27;)+&#x27;&lt;p style=&quot;margin:0&quot;&gt;&lt;b&gt;Boquilla&lt;/b&gt;. Por aquí sale el producto hacia la mano del huésped.&lt;/p&gt;&#x27;;
+part(100,3,100,26,-44,&#x27;#0e7490&#x27;,&#x27;ESP32 · cerebro&lt;br&gt;lee sensores y envía por Wi-Fi&#x27;,&#x27;esp&#x27;);
+part(8,3,80,26,-44,&#x27;#b91c1c&#x27;,&#x27;Fuente 5V&lt;br&gt;da energía&#x27;,&#x27;psu&#x27;);
+part(212,3,80,26,-44,&#x27;#1d4ed8&#x27;,&#x27;Driver&lt;br&gt;enciende las bombas&#x27;,&#x27;drv&#x27;);
+[25,95,165,235].forEach((l,i)=&gt;{
+ part(l+8,34,40,18,-44,&#x27;#15803d&#x27;,&#x27;HX711&lt;br&gt;amplifica&#x27;,&#x27;hx&#x27;);
+ part(l,56,56,8,-30,&#x27;#d4d4d8&#x27;,&#x27;&lt;span style=&quot;color:#111&quot;&gt;Celda de carga: pesa&lt;/span&gt;&#x27;,&#x27;lc&#x27;);
+ const [g,fr]=bx(l,68,56,80,40,-10,C[i],[70,55,45,80][i]);fr.innerHTML=&#x27;&lt;div style=&quot;text-align:center;padding-bottom:6px&quot;&gt;&#x27;+N[i]+&#x27;&lt;br&gt;(depósito)&lt;/div&gt;&#x27;;fr.onclick=null;g.onclick=e=&gt;show(&#x27;bt&#x27;,g);g.style.cursor=&#x27;pointer&#x27;;sc.appendChild(g);
+ part(l+16,150,24,22,-20,&#x27;#52525b&#x27;,&#x27;Bomba&lt;br&gt;dosifica&#x27;,&#x27;pm&#x27;);
+ const nz=document.createElement(&#x27;div&#x27;);nz.className=&#x27;a&#x27;;nz.style.cssText=&#x27;left:&#x27;+(l+25)+&#x27;px;top:172px;width:6px;height:24px;background:#bbb;transform:translateZ(-10px)&#x27;;sc.appendChild(nz)});
+let rx=-8,ry=-20,d=0,lx,ly;const s=document.getElementById(&#x27;st&#x27;);
+const up=()=&gt;sc.style.transform=&#x27;rotateX(&#x27;+rx+&#x27;deg) rotateY(&#x27;+ry+&#x27;deg) scale(1.1)&#x27;;
+s.onpointerdown=e=&gt;{d=1;lx=e.clientX;ly=e.clientY;s.setPointerCapture(e.pointerId)};s.onpointerup=()=&gt;d=0;
+s.onpointermove=e=&gt;{if(!d)return;ry+=(e.clientX-lx)*.6;rx-=(e.clientY-ly)*.4;lx=e.clientX;ly=e.clientY;up()};
+function tg(){const e=document.getElementById(&#x27;shell&#x27;);e.style.opacity=e.style.opacity===&#x27;0&#x27;?1:0}
+function rs(){rx=-8;ry=-20;up()}
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+"></iframe>
+<script>
+function go(n){for(const i of [1,2]){document.getElementById('f'+i).classList.toggle('on',i==n);document.getElementById('b'+i).classList.toggle('on',i==n)}}
+</script></body></html>

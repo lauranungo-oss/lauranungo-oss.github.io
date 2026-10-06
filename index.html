@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SmartDispenser Hotel – Prototipo MVP</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1d2330;--mut:#6b7385;--bd:#dde1e8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171d;--card:#1e232c;--tx:#eef0f4;--mut:#9aa3b5;--bd:#303744}}
+:root[data-theme="dark"]{--bg:#14171d;--card:#1e232c;--tx:#eef0f4;--mut:#9aa3b5;--bd:#303744}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.4}
+header{padding:16px 20px;border-bottom:1px solid var(--bd)}
+h1{font-size:18px;margin:0}header p{margin:2px 0 0;color:var(--mut);font-size:13px}
+main{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;padding:16px;max-width:1100px;margin:auto}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px}
+h2{font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
+.stage{height:300px;perspective:900px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab;background:#6d6a6a;border-radius:10px}
+.box{position:relative;width:240px;height:160px;transform-style:preserve-3d;transform:rotateX(-12deg) rotateY(-25deg)}
+.f{position:absolute;background:#16181c;border:1px solid #3a3f4a;display:flex;align-items:center;justify-content:center;color:#666;font-size:11px}
+.fr{width:240px;height:160px;transform:translateZ(40px)}
+.bk{width:240px;height:160px;transform:rotateY(180deg) translateZ(40px)}
+.lf{width:80px;height:160px;left:80px;transform:rotateY(-90deg) translateZ(120px)}
+.rt{width:80px;height:160px;left:80px;transform:rotateY(90deg) translateZ(120px)}
+.tp{width:240px;height:80px;top:40px;transform:rotateX(90deg) translateZ(80px)}
+.bt{width:240px;height:80px;top:40px;transform:rotateX(-90deg) translateZ(80px)}
+.fr{justify-content:space-around;align-items:flex-end;padding:0 4px 14px}
+.slot{text-align:center;color:#ddd;font-size:9px;width:25%}
+.led{width:5px;border-radius:3px;margin:0 auto 8px;height:40px;transition:.4s}
+.nz{position:absolute;bottom:-24px;width:14px;height:24px;background:#222;border-radius:0 0 4px 4px;transform:translateZ(40px)}
+.hint{font-size:12px;color:var(--mut);text-align:center;margin-top:8px}
+select,input,button{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:7px 10px}
+button{cursor:pointer}button:hover{border-color:#4a8dff}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.prod{margin:10px 0}.top{display:flex;justify-content:space-between;font-size:13px}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden;margin:4px 0}
+.bar i{display:block;height:100%;transition:width .4s}
+.sub{font-size:12px;color:var(--mut)}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:#ffe3e0;color:#a32a1c;margin:2px}
+.ok{background:#dff5e6;color:#1c6b36}
+.alert{font-size:13px;padding:8px 10px;border-radius:8px;margin:6px 0;background:#fff1d6;color:#7a4b00}
+.alert.red{background:#ffe3e0;color:#a32a1c}
+.wide{grid-column:1/-1}
+code{font-size:12px}
+.sens{font-size:13px;color:var(--mut)}
+</style></head><body>
+<header><h1>SmartDispenser Hotel · Prototipo MVP</h1><p>Dispensador inteligente con monitoreo de nivel y conexión al software del hotel (simulación funcional)</p></header>
+<main>
+<section class="card">
+<h2>Modelo 3D (arrastra para girar)</h2>
+<div class="stage" id="stage"><div class="box" id="box">
+<div class="f fr" id="front"></div><div class="f bk">Trasera · placa + ranuras de pared</div>
+<div class="f lf"></div><div class="f rt"></div><div class="f tp"></div><div class="f bt">Depósitos</div>
+</div></div>
+<div class="hint">30 × 20 × 10 cm aprox. · Los LEDs reflejan el nivel real de cada depósito</div>
+</section>
+
+<section class="card">
+<h2>Habitación y huésped</h2>
+<div class="row"><select id="room"></select><button onclick="sim()">Simular 1 día</button></div>
+<div id="guest"></div>
+<div class="row"><input id="gn" placeholder="Nombre huésped" size="14">
+<label><input type="checkbox" class="al" value="Fragancia"> Fragancia</label>
+<label><input type="checkbox" class="al" value="Alcohol"> Alcohol</label>
+<label><input type="checkbox" class="al" value="Parabenos"> Parabenos</label>
+<button onclick="checkin()">Check-in (PMS)</button></div>
+<div class="sub">Al hacer check-in, el software del hotel envía alergias y preferencias a la habitación.</div>
+</section>
+
+<section class="card">
+<h2>Niveles (panel del personal)</h2>
+<div id="levels"></div>
+<div id="alerts"></div>
+</section>
+
+<section class="card wide">
+<h2>¿Cómo mide el nivel? (hardware real)</h2>
+<div class="sens"><b>Opción recomendada:</b> celda de carga + módulo HX711 bajo cada depósito (pesa el líquido, preciso a ±2 ml). <b>Alternativa económica:</b> sensor ultrasónico HC-SR04 sobre el depósito. Un <b>ESP32</b> lee los 4 sensores y envía por Wi-Fi (MQTT / HTTP) al servidor del hotel. La <b>estimación de días restantes</b> = nivel actual ÷ consumo promedio diario. Este prototipo simula esas lecturas con los botones de arriba.</div>
+<div class="row"><button onclick="ev()">Ver lectura simulada del ESP32 (JSON)</button></div>
+<pre><code id="json"></code></pre>
+</section>
+</main>
+<script>
+const P=[{k:'Jabón',c:'#3b82f6',r:30,m:'',a:null},{k:'Espuma',c:'#ffffff',r:20,a:null},{k:'Desinfectante',c:'#22c55e',r:25,a:'Alcohol'},{k:'Shampoo',c:'#a855f7',r:35,a:'Fragancia'}];
+const CAP=500;
+const R={};[101,102,103,104].forEach((n,i)=>R[n]={guest:['María López','Carlos Ruiz','—','Ana Torres'][i],al:i==0?['Fragancia']:i==1?['Alcohol']:[],lv:P.map(p=>Math.round(CAP*(.3+Math.random()*.7)))});
+const $=id=>document.getElementById(id);
+Object.keys(R).forEach(n=>$('room').add(new Option('Habitación '+n,n)));
+$('room').onchange=draw;
+const cur=()=>R[$('room').value];
+function pct(v){return Math.round(v/CAP*100)}
+function col(p){return p<15?'#ef4444':p<35?'#f59e0b':'#22c55e'}
+function draw(){
+ const r=cur(),n=$('room').value;
+ $('guest').innerHTML='<b>'+r.guest+'</b><div>'+(r.al.length?r.al.map(a=>'<span class="tag">Alérgico: '+a+'</span>').join(''):'<span class="tag ok">Sin alergias registradas</span>')+'</div>';
+ $('front').innerHTML=P.map((p,i)=>'<div class="slot"><div class="led" style="background:'+p.c+';box-shadow:0 0 8px '+p.c+';height:'+Math.max(4,pct(r.lv[i])*.4)+'px;opacity:'+(r.lv[i]<75?.5:1)+'"></div>'+p.k+'</div>').join('');
+ let al='';
+ $('levels').innerHTML=P.map((p,i)=>{
+  const v=r.lv[i],q=pct(v),d=Math.floor(v/p.r),blk=p.a&&r.al.includes(p.a);
+  if(q<20)al+='<div class="alert red">⚠ Hab. '+n+': '+p.k+' al '+q+'% – rellenar hoy</div>';
+  else if(d<=3)al+='<div class="alert">Hab. '+n+': '+p.k+' se agota en ~'+d+' días</div>';
+  if(blk)al+='<div class="alert red">🚫 '+r.guest+' es alérgico a '+p.a+': cambiar '+p.k+' por versión hipoalergénica</div>';
+  return '<div class="prod"><div class="top"><span>'+p.k+'</span><span>'+v+' ml · '+q+'%</span></div><div class="bar"><i style="width:'+q+'%;background:'+col(q)+'"></i></div><div class="sub">~'+d+' días restantes · <button onclick="use('+i+')">Dispensar</button> <button onclick="fill('+i+')">Rellenar</button></div></div>'}).join('');
+ $('alerts').innerHTML=al;
+ ev();
+}
+function use(i){const r=cur();r.lv[i]=Math.max(0,r.lv[i]-(3+Math.floor(Math.random()*6)));draw()}
+function fill(i){cur().lv[i]=CAP;draw()}
+function sim(){const r=cur();r.lv=r.lv.map((v,i)=>Math.max(0,v-Math.round(P[i].r*(.7+Math.random()*.6))));draw()}
+function checkin(){const n=$('gn').value.trim();if(!n)return;const r=cur();r.guest=n;r.al=[...document.querySelectorAll('.al:checked')].map(e=>e.value);r.lv=P.map(()=>CAP);$('gn').value='';draw()}
+function ev(){const r=cur();$('json').textContent=JSON.stringify({room:+$('room').value,ts:new Date().toISOString(),sensors:P.map((p,i)=>({product:p.k,ml:r.lv[i],pct:pct(r.lv[i]),est_days:Math.floor(r.lv[i]/p.r)}))},null,1)}
+// 3D drag
+let rx=-12,ry=-25,dn=false,lx,ly;const st=$('stage'),bx=$('box');
+st.onpointerdown=e=>{dn=true;lx=e.clientX;ly=e.clientY;st.setPointerCapture(e.pointerId)};
+st.onpointerup=()=>dn=false;
+st.onpointermove=e=>{if(!dn)return;ry+=(e.clientX-lx)*.6;rx-=(e.clientY-ly)*.4;lx=e.clientX;ly=e.clientY;bx.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)'};
+draw();
+</script></body></html>
